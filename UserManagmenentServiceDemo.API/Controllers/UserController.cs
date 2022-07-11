@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using UserManagmenentServiceDemo.API.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,6 +10,15 @@ namespace UserManagmenentServiceDemo.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            _roleManager = roleManager;
+            _userManager = userManager;
+        }
         // GET: api/<UserController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -24,6 +35,7 @@ namespace UserManagmenentServiceDemo.API.Controllers
 
         // POST api/<UserController>
         [HttpPost]
+        [Route("register-admin")]
         public void Post([FromBody] string value)
         {
         }
