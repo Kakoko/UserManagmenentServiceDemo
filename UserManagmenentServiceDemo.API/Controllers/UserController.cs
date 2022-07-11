@@ -75,7 +75,7 @@ namespace UserManagmenentServiceDemo.API.Controllers
                 await _userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
-            return Ok(new { Status = "Success", Message = "Administrator created successfully!" });
+            return Ok(new Response { Status = "Success", Message = "Administrator created successfully!" });
         }
 
         // PUT api/<UserController>/5
