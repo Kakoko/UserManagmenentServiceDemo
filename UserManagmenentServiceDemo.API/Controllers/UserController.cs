@@ -78,6 +78,51 @@ namespace UserManagmenentServiceDemo.API.Controllers
             return Ok(new Response { Status = "Success", Message = "Administrator created successfully!" });
         }
 
+
+        // POST api/<UserController>
+        [HttpPost]
+        [Route("register-user")]
+        public async Task<IActionResult> PostUser([FromBody] RegisterAdminModelUsers adminModelUser)
+        {
+            //Check to see if user exists
+            var userExists = await _userManager.FindByEmailAsync(adminModelUser.Email);
+
+            if (userExists != null)
+            {
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            var user = new ApplicationUser()
+            {
+                Email = adminModelUser.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = adminModelUser.Email,
+                FirstName = adminModelUser.FirstName,
+                LastName = adminModelUser.LastName,
+                PhoneNumber = adminModelUser.Phone,
+            };
+
+            var result = await _userManager.CreateAsync(user, adminModelUser.Password);
+
+            if (!result.Succeeded)
+            {
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Normal))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Normal));
+
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.Normal))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.Normal);
+            }
+
+            return Ok(new Response { Status = "Success", Message = $"{user.Email} created successfully!" });
+        }
+
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
