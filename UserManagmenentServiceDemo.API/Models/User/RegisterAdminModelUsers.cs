@@ -17,5 +17,8 @@ namespace UserManagmenentServiceDemo.API.Models.User
         [Phone]
         [Required(ErrorMessage = "Phone Number is required")]
         public string Phone { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Password is required")]
+        public string Password { get; set; } = string.Empty;
     }
 }

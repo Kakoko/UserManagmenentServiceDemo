@@ -77,7 +77,7 @@ builder.Services.AddAuthentication(x =>
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
-    var Key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]);
+    var Key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]);
     o.SaveToken = true;
     o.TokenValidationParameters = new TokenValidationParameters
     {

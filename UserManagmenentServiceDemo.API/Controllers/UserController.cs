@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UserManagmenentServiceDemo.API.Models;
+using UserManagmenentServiceDemo.API.Models.User;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,8 +37,45 @@ namespace UserManagmenentServiceDemo.API.Controllers
         // POST api/<UserController>
         [HttpPost]
         [Route("register-admin")]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] RegisterAdminModelUsers adminModelUser)
         {
+            //Check to see if user exists
+            var userExists = await _userManager.FindByEmailAsync(adminModelUser.Email);
+
+            if(userExists != null)
+            {
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            var user = new ApplicationUser()
+            {
+                Email = adminModelUser.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = adminModelUser.Email,
+                FirstName = adminModelUser.FirstName,
+                LastName = adminModelUser.LastName,
+                PhoneNumber = adminModelUser.Phone,
+            };
+
+            var result = await _userManager.CreateAsync(user, adminModelUser.Password);
+
+            if (!result.Succeeded)
+            {
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Normal))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Normal));
+
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+            }
+
+            return Ok(new { Status = "Success", Message = "Administrator created successfully!" });
         }
 
         // PUT api/<UserController>/5
