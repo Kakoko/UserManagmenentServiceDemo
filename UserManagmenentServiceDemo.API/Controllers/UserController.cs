@@ -13,7 +13,7 @@ using UserManagmenentServiceDemo.API.Models.User;
 namespace UserManagmenentServiceDemo.API.Controllers
 {
 
-    [Authorize(Roles = UserRoles.Admin)]
+   // [Authorize(Roles = UserRoles.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -130,14 +130,14 @@ namespace UserManagmenentServiceDemo.API.Controllers
         {
             if(!(adminModelUser.Role == UserRoles.Admin || adminModelUser.Role == UserRoles.Admin || adminModelUser.Role == UserRoles.Admin))
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return  StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "Role does not exist!" });
             }
             //Check to see if user exists
             var userExists = await _userManager.FindByEmailAsync(adminModelUser.Email);
 
             if (userExists != null)
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "User already exists!" });
             }
 
             var user = new ApplicationUser()
