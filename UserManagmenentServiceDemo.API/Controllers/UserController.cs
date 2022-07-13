@@ -78,57 +78,13 @@ namespace UserManagmenentServiceDemo.API.Controllers
             return Unauthorized();
         }
 
-        // POST api/<UserController>
-        [HttpPost]
-        [Route("register-admin")]
-        public async Task<IActionResult> Post([FromBody] RegisterModelUsers adminModelUser)
-        {
-            //Check to see if user exists
-            var userExists = await _userManager.FindByEmailAsync(adminModelUser.Email);
-
-            if(userExists != null)
-            {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
-            }
-
-            var user = new ApplicationUser()
-            {
-                Email = adminModelUser.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = adminModelUser.Email,
-                FirstName = adminModelUser.FirstName,
-                LastName = adminModelUser.LastName,
-                PhoneNumber = adminModelUser.Phone,
-            };
-
-            var result = await _userManager.CreateAsync(user, adminModelUser.Password);
-
-            if (!result.Succeeded)
-            {
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            }
-
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Normal))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Normal));
-
-
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-            }
-
-            return Ok(new Response { Status = "Success", Message = "Administrator created successfully!" });
-        }
-
-
+        
         // POST api/<UserController>
         [HttpPost]
         [Route("register-user")]
         public async Task<IActionResult> PostUser([FromBody] RegisterModelUsers adminModelUser)
         {
-            if(!(adminModelUser.Role == UserRoles.Admin || adminModelUser.Role == UserRoles.Admin || adminModelUser.Role == UserRoles.Admin))
+            if(!(adminModelUser.Role == UserRoles.Normal || adminModelUser.Role == UserRoles.Admin || adminModelUser.Role == UserRoles.HeadOfDepartment))
             {
                 return  StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "Role does not exist!" });
             }
