@@ -238,5 +238,41 @@ namespace UserManagmenentServiceDemo.API.Controllers
             }
         }
 
+
+        [HttpPut]
+        [Route("deactivate")]
+        public async Task<IActionResult> DeactivateUser([FromBody] string username)
+        {
+
+            var userExists = await _userManager.FindByNameAsync(username);
+            if (userExists == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User does not exists!" });
+            }
+            if (userExists.ActivationStatus)
+            {
+
+                userExists.ActivationStatus = false;
+
+                var result = await _userManager.UpdateAsync(userExists);
+
+                if (result.Succeeded)
+                {
+                    return Ok(new Response { Status = "Success", Message = "User deactivated successfully!" });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to deactivate user" });
+                }
+
+            }
+
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already deactivated" });
+            }
+        }
+
+
     }
 }
