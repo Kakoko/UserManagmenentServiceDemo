@@ -12,6 +12,8 @@ using UserManagmenentServiceDemo.API.Models.User;
 
 namespace UserManagmenentServiceDemo.API.Controllers
 {
+
+    [Authorize(Roles = UserRoles.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -79,7 +81,7 @@ namespace UserManagmenentServiceDemo.API.Controllers
         // POST api/<UserController>
         [HttpPost]
         [Route("register-admin")]
-        public async Task<IActionResult> Post([FromBody] RegisterAdminModelUsers adminModelUser)
+        public async Task<IActionResult> Post([FromBody] RegisterModelUsers adminModelUser)
         {
             //Check to see if user exists
             var userExists = await _userManager.FindByEmailAsync(adminModelUser.Email);
@@ -124,8 +126,12 @@ namespace UserManagmenentServiceDemo.API.Controllers
         // POST api/<UserController>
         [HttpPost]
         [Route("register-user")]
-        public async Task<IActionResult> PostUser([FromBody] RegisterAdminModelUsers adminModelUser)
+        public async Task<IActionResult> PostUser([FromBody] RegisterModelUsers adminModelUser)
         {
+            if(!(adminModelUser.Role == UserRoles.Admin || adminModelUser.Role == UserRoles.Admin || adminModelUser.Role == UserRoles.Admin))
+            {
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
             //Check to see if user exists
             var userExists = await _userManager.FindByEmailAsync(adminModelUser.Email);
 
@@ -155,12 +161,13 @@ namespace UserManagmenentServiceDemo.API.Controllers
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             if (!await _roleManager.RoleExistsAsync(UserRoles.Normal))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Normal));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.HeadOfDepartment))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.HeadOfDepartment));
 
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.Normal))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Normal);
-            }
+           
+           await _userManager.AddToRoleAsync(user, adminModelUser.Role);
+            
 
             return Ok(new Response { Status = "Success", Message = $"{user.Email} created successfully!" });
         }

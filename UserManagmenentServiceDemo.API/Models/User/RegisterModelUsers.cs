@@ -2,7 +2,7 @@
 
 namespace UserManagmenentServiceDemo.API.Models.User
 {
-    public class RegisterAdminModelUsers
+    public class RegisterModelUsers
     {
         [Required(ErrorMessage = "First Name is required")]
         public string FirstName { get; set; } = string.Empty;
@@ -20,5 +20,8 @@ namespace UserManagmenentServiceDemo.API.Models.User
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Role is required")]
+        public string Role { get; set; } = string.Empty;
     }
 }
