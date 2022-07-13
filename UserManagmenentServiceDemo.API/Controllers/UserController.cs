@@ -165,5 +165,43 @@ namespace UserManagmenentServiceDemo.API.Controllers
             return Ok(new Response { Status = "Success", Message = $"{user.Email} created successfully!" });
         }
 
+
+        [HttpPut]
+        [Route("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordResetModel resetPasswordModel)
+        {
+
+            var userExists = await _userManager.FindByNameAsync(resetPasswordModel.Username);
+
+            if (userExists == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"User does not exists!" });
+            }
+
+
+            var passwordValidator = new PasswordValidator<ApplicationUser>();
+            var passwordValidatorResult = await _userManager.CheckPasswordAsync(userExists, resetPasswordModel.CurrentPassword);
+
+            if (passwordValidatorResult)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(userExists);
+
+                var result = await _userManager.ResetPasswordAsync(userExists, token, resetPasswordModel.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    return Ok(new Response { Status = "Success", Message = $"Password changed for {userExists.UserName}, successfully!" });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to change password" });
+                }
+            }
+
+            return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "Current password not correct" });
+
+
+        }
+
     }
 }
