@@ -34,7 +34,7 @@ namespace UserManagmenentServiceDemo.API.Services
             user.FirstName = userModel.FirstName;
             user.LastName = userModel.LastName;
             user.PhoneNumber = userModel.PhoneNumber;
-            user.Email = userModel.Email;
+            
 
 
 
@@ -47,9 +47,9 @@ namespace UserManagmenentServiceDemo.API.Services
                 {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
                     UserName = user.UserName
+                    
                 };
 
                
