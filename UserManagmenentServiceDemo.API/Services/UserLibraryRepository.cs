@@ -192,5 +192,10 @@ namespace UserManagmenentServiceDemo.API.Services
         {
             throw new NotImplementedException();
         }
+
+        public bool Save()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
