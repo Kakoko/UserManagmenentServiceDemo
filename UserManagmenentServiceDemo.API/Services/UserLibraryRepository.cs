@@ -223,7 +223,7 @@ namespace UserManagmenentServiceDemo.API.Services
 
         public async Task<UserInfoModel> GetUserByUsername(string username)
         {
-            var user = await _userManager.FindByIdAsync(username);
+            var user = await _userManager.FindByNameAsync(username);
             var userInfo = new UserInfoModel();
 
             if (user == null)

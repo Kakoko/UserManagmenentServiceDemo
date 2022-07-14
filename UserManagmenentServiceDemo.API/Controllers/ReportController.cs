@@ -47,7 +47,7 @@ namespace UserManagmenentServiceDemo.API.Controllers
 
         // PUT api/<ReportController>/5
         [HttpPut]
-        [Route("edit-internaluser")]
+        [Route("edit-user")]
         public async Task<ActionResult<EditUserModel>> EditInternalUser(EditUserModel userModel)
         {
             if (userModel == null)
