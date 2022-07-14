@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using UserManagmenentServiceDemo.API.Context;
 using UserManagmenentServiceDemo.API.Models;
+using UserManagmenentServiceDemo.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +66,9 @@ builder.Services.AddSwaggerGen(
 // For Entity Framework  
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+// Adding Dependencies
+builder.Services.AddScoped<IUserLibraryRepository, UserLibraryRepository>();
 // For Identity  
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
