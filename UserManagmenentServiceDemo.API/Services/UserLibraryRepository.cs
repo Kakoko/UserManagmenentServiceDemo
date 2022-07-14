@@ -5,7 +5,7 @@ using UserManagmenentServiceDemo.API.Models.User;
 
 namespace UserManagmenentServiceDemo.API.Services
 {
-    public class UserLibraryRepository : IUserLibraryRepository
+    public class UserLibraryRepository : IUserLibraryRepository, IDisposable
     {
 
         private readonly ApplicationDbContext _context;
@@ -195,7 +195,22 @@ namespace UserManagmenentServiceDemo.API.Services
 
         public bool Save()
         {
-            throw new NotImplementedException();
+            return (_context.SaveChanges() >= 0);
+        }
+
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // dispose resources when needed
+            }
         }
     }
 }
