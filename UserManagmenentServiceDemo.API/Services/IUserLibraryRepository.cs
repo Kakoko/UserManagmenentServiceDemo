@@ -1,12 +1,13 @@
 ﻿using UserManagmenentServiceDemo.API.Models;
+using UserManagmenentServiceDemo.API.Models.User;
 
 namespace UserManagmenentServiceDemo.API.Services
 {
     public interface IUserLibraryRepository
     {
-        Task<List<ApplicationUser>> GetAllUsers(string flag);
-        Task<ApplicationUser> GetUserByUsername(string username);
-        Task<ApplicationUser> EditUser(ApplicationUser user);
+        Task<List<UserInfoModel>> GetAllUsers(UserResourceParameters userResourceParameters);
+        Task<UserInfoModel> GetUserByUsername(string username);
+        Task<UserInfoModel> EditUser(UserInfoModel user);
 
 
     }
