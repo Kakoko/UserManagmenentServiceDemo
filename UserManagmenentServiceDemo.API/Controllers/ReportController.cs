@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserManagmenentServiceDemo.API.Models.User;
 using UserManagmenentServiceDemo.API.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,40 +15,48 @@ namespace UserManagmenentServiceDemo.API.Controllers
         private readonly IUserLibraryRepository _userLibraryRepository;
 
         public ReportController(IUserLibraryRepository userLibraryRepository)
-        {
+        {   
             _userLibraryRepository = userLibraryRepository ??
                 throw new ArgumentNullException(nameof(userLibraryRepository));
         }
         // GET: api/<ReportController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("users")]
+        public async Task<IActionResult> GetInternalUsersAsync([FromQuery] UserResourceParameters userResourceParameters)
         {
-            return new string[] { "value1", "value2" };
+            var users = await _userLibraryRepository.GetAllUsers(userResourceParameters);
+            return Ok(users);
         }
 
         // GET api/<ReportController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        [Route("getusers-by-id")]
+        public async Task<IActionResult> GetUsersById([FromQuery] string userName)
         {
-            return "value";
-        }
 
-        // POST api/<ReportController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
+            if (userName == null)
+            {
+                return BadRequest();
+            }
+
+            var usersFromRepo = await _userLibraryRepository.GetUserByUsername(userName);
+
+
+            return Ok(usersFromRepo);
         }
 
         // PUT api/<ReportController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        [Route("edit-internaluser")]
+        public async Task<ActionResult<EditUserModel>> EditInternalUser(EditUserModel userModel)
         {
+            if (userModel == null)
+            {
+                return BadRequest();
+            }
+
+            return await _userLibraryRepository.EditUser(userModel);
         }
 
-        // DELETE api/<ReportController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
