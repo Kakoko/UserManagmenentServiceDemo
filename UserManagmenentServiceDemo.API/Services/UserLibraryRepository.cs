@@ -188,9 +188,40 @@ namespace UserManagmenentServiceDemo.API.Services
 
         }   
 
-        public Task<UserInfoModel> GetUserByUsername(string username)
+        public async Task<UserInfoModel> GetUserByUsername(string username)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(username);
+            var userInfo = new UserInfoModel();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var userRole = userRoles[0].Trim();
+
+            if (user.ActivationStatus)
+            {
+                userInfo = new UserInfoModel()
+
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber,
+                    Email = user.Email,
+                    Username = user.UserName,
+                    UserActivationStatus = user.ActivationStatus,
+                    Role = userRole
+                };
+
+
+                
+            }
+
+            return userInfo;
+
+
         }
 
         public bool Save()
