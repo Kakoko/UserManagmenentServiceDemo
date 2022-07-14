@@ -7,7 +7,7 @@ namespace UserManagmenentServiceDemo.API.Services
     {
         Task<List<UserInfoModel>> GetAllUsers(UserResourceParameters userResourceParameters);
         Task<UserInfoModel> GetUserByUsername(string username);
-        Task<UserInfoModel> EditUser(UserInfoModel user);
+        Task<EditUserModel> EditUser(EditUserModel user);
         bool Save();
 
 

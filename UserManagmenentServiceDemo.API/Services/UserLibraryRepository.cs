@@ -19,9 +19,44 @@ namespace UserManagmenentServiceDemo.API.Services
         }
 
 
-        public Task<UserInfoModel> EditUser(UserInfoModel user)
+        public async Task<EditUserModel> EditUser(EditUserModel userModel)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByNameAsync(userModel.UserName);
+            var userInfo = new EditUserModel();
+
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+
+            user.FirstName = userModel.FirstName;
+            user.LastName = userModel.LastName;
+            user.PhoneNumber = userModel.PhoneNumber;
+            user.Email = userModel.Email;
+
+
+
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                userInfo = new EditUserModel()
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    UserName = user.UserName
+                };
+
+               
+            }
+
+            return userInfo;
+
         }
 
         public async Task<List<UserInfoModel>> GetAllUsers(UserResourceParameters userResourceParameters)
@@ -35,6 +70,11 @@ namespace UserManagmenentServiceDemo.API.Services
             if(userResourceParameters == null)
             {
                 throw new ArgumentNullException(nameof(userResourceParameters));
+            }
+
+            if(users == null)
+            {
+                throw new ArgumentNullException(nameof(users));
             }
 
 
@@ -64,7 +104,7 @@ namespace UserManagmenentServiceDemo.API.Services
                     }
                 }
 
-                return userInfo;
+               // return userInfo;
             }
 
             // For Admins
@@ -100,7 +140,7 @@ namespace UserManagmenentServiceDemo.API.Services
                     }
                 }
 
-                return userInfo;
+              //  return userInfo;
             }
 
 
@@ -137,7 +177,7 @@ namespace UserManagmenentServiceDemo.API.Services
                     }
                 }
 
-                return userInfo;
+               // return userInfo;
             }
 
             //For Normal User
@@ -173,18 +213,11 @@ namespace UserManagmenentServiceDemo.API.Services
                     }
                 }
 
-                return userInfo;
+               // return userInfo;
             }
 
-            return new List<UserInfoModel>()
-            {
-                new UserInfoModel()
-                {
-                    Username = "No Records Founds"
-                }
-            };
 
-
+            return userInfo;
 
         }   
 
