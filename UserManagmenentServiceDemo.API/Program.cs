@@ -98,7 +98,8 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+//For Production
+if (app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI(o =>
@@ -106,6 +107,13 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         o.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
         o.RoutePrefix = string.Empty;
     });
+}
+
+//For Development
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
 

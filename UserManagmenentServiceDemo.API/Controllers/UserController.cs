@@ -13,7 +13,7 @@ using UserManagmenentServiceDemo.API.Models.User;
 namespace UserManagmenentServiceDemo.API.Controllers
 {
 
-    [Authorize(Roles = UserRoles.Admin)]
+    //[Authorize(Roles = UserRoles.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

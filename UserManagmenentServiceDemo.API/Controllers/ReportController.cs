@@ -8,7 +8,7 @@ using UserManagmenentServiceDemo.API.Services;
 namespace UserManagmenentServiceDemo.API.Controllers
 {
 
-    [Authorize(Roles = UserRoles.HeadOfDepartment)]
+   // [Authorize(Roles = UserRoles.HeadOfDepartment)]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportController : ControllerBase
@@ -32,7 +32,7 @@ namespace UserManagmenentServiceDemo.API.Controllers
         }
 
         // GET api/<ReportController>/5
-        [Authorize(Roles = UserRoles.Normal)]
+       // [Authorize(Roles = UserRoles.Normal)]
         [HttpGet]
         [Route("getusers-by-id")]
         public async Task<IActionResult> GetUsersById([FromQuery] string userName)
